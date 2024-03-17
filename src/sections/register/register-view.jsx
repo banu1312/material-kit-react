@@ -1,7 +1,7 @@
-import { useState,  useContext  } from 'react';
+/* eslint-disable import/no-extraneous-dependencies */
+import { useState, useContext  } from 'react';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
@@ -14,33 +14,63 @@ import InputAdornment from '@mui/material/InputAdornment';
 import useInput from 'src/hooks/useInput';
 
 import { bgGradient } from 'src/theme/css';
+// import { useAuthContext } from 'src/api/authContext';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+
+import useDate from 'src/hooks/useDate';
+
 import AuthContext from 'src/api/authContext';
 
 import Iconify from 'src/components/iconify';
 
+
 // ----------------------------------------------------------------------
 
-export default function LoginView() {
+export default function RegisterView() {
   const theme = useTheme();
-  const { login } = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
   const [email,onEmailChange] = useInput("")
+  const [name,onNameChange] = useInput("")
+  const [birthDay,onBirthDayChange] = useDate("")
+  const [phone,onNomerChange] = useInput("")
   const [password,onPasswordChange] = useInput("")
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = async () => {
-    await login({ email, password });
+    await register({ email, password, name,birthDay,role_id:2,phone });
   };
-
   const renderForm = (
     <>
-      <Stack spacing={3}>
-        <TextField name="email" label="Email address" onChange={onEmailChange}/>
+      <Stack spacing={3} my={3}>
+        <TextField name="name" label="Full Name" onChange={onNameChange}/>
+        <TextField name="nomer" label="Phone Number" onChange={onNomerChange}/>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer
+                components={[
+                  'DatePicker',
+                  'MobileDatePicker',
+                  'DesktopDatePicker',
+                  'StaticDatePicker',
+                ]}
+                >
+                  <DatePicker 
+                  label="Birth Date"
+                  onChange={onBirthDayChange}
+                  disableFuture
+                  // slotProps={{ textField: { helperText:state.validationErrors.RegisterDate , error:!!state.validationErrors.RegisterDate} }}
+                  />
 
+              </DemoContainer>
+            </LocalizationProvider>
+        <TextField name="email" label="Email address" onChange={onEmailChange}/>
+        
         <TextField
           name="password"
           label="Password"
-          type={showPassword ? 'text' : 'password'}
           onChange={onPasswordChange}
           InputProps={{
             endAdornment: (
@@ -54,12 +84,6 @@ export default function LoginView() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
-      </Stack>
-
       <LoadingButton
         fullWidth
         size="large"
@@ -68,10 +92,11 @@ export default function LoginView() {
         color="inherit"
         onClick={handleClick}
       >
-        Login
+        Register
       </LoadingButton>
     </>
   );
+
   return (
     
     <Box
@@ -83,6 +108,7 @@ export default function LoginView() {
         height: 1,
       }}
     >
+
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -91,14 +117,7 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in</Typography>
-
-          <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
-            Don’t have an account?
-            <Link href="/register" variant="subtitle2" sx={{ ml: 0.5 }}>
-              Get started
-            </Link>
-          </Typography>
+          <Typography variant="h4" sx={{mb:3}}>Registration Account</Typography>
           {renderForm}
         </Card>
       </Stack>

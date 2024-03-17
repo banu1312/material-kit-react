@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { ProductsView } from 'src/sections/products/view';
+import { ProjectsView } from 'src/sections/projects/view';
 
 // ----------------------------------------------------------------------
 
-export default function ProductsPage() {
+export default function ProjectsPage() {
   return (
     <>
       <Helmet>
-        <title> Products | Minimal UI </title>
+        <title> Project Page </title>
       </Helmet>
 
-      <ProductsView />
+      <ProjectsView />
     </>
   );
 }

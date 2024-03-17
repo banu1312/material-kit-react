@@ -1,6 +1,6 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 
-import Stack from '@mui/material/Stack';
+// import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
@@ -8,30 +8,30 @@ import Typography from '@mui/material/Typography';
 import { products } from 'src/_mock/products';
 
 import ProductCard from '../product-card';
-import ProductSort from '../product-sort';
-import ProductFilters from '../product-filters';
+// import ProductSort from '../product-sort';
+// import ProductFilters from '../product-filters';
 import ProductCartWidget from '../product-cart-widget';
 
 // ----------------------------------------------------------------------
 
-export default function ProductsView() {
-  const [openFilter, setOpenFilter] = useState(false);
+export default function ProjectsView() {
+  // const [openFilter, setOpenFilter] = useState(false);
 
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
+  // const handleOpenFilter = () => {
+  //   setOpenFilter(true);
+  // };
 
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
+  // const handleCloseFilter = () => {
+  //   setOpenFilter(false);
+  // };
 
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        Projects
       </Typography>
 
-      <Stack
+      {/* <Stack
         direction="row"
         alignItems="center"
         flexWrap="wrap-reverse"
@@ -47,7 +47,7 @@ export default function ProductsView() {
 
           <ProductSort />
         </Stack>
-      </Stack>
+      </Stack> */}
 
       <Grid container spacing={3}>
         {products.map((product) => (

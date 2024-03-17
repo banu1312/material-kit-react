@@ -1,4 +1,6 @@
-import { useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -10,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import { account } from 'src/_mock/account';
+import { getUserLogged } from 'src/api/auth';
+import { useAuthContext } from 'src/api/authContext';
 
 // ----------------------------------------------------------------------
 
@@ -17,37 +21,57 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
+    path: '/'
   },
   {
     label: 'Profile',
     icon: 'eva:person-fill',
   },
   {
-    label: 'Settings',
+    label: 'History Donasi',
     icon: 'eva:settings-2-fill',
+    path:'/historyDonasi'
   },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
+export default function AccountPopover({flag}) {
   const [open, setOpen] = useState(null);
+  const { logout } = useAuthContext();
+  const navigate = useNavigate()
+  const [userInfo,setUserInfo] = useState()
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (path) => {
+    setOpen(null);
+    navigate(path)
+  };
+  const handleLogout = async () => {
+    await logout()
     setOpen(null);
   };
-
+  useEffect(()=>{
+    const getUser=()=>{
+      getUserLogged().then(res=>{
+        setUserInfo(res.data.user)
+      })
+    }
+    getUser()
+  },[])
+  console.log(userInfo);
   return (
     <>
+      {userInfo ? (
+        <>
       <IconButton
         onClick={handleOpen}
         sx={{
-          width: 40,
-          height: 40,
+          width: flag === 1  ? 68 : 40,
+          height: flag === 1 ? 68 : 40,
           background: (theme) => alpha(theme.palette.grey[500], 0.08),
           ...(open && {
             background: (theme) =>
@@ -59,8 +83,8 @@ export default function AccountPopover() {
           src={account.photoURL}
           alt={account.displayName}
           sx={{
-            width: 36,
-            height: 36,
+            width: flag === 1  ? 64: 40,
+            height: flag === 1  ? 64 : 40,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
@@ -85,17 +109,17 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {userInfo.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {userInfo.email}
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
+          <MenuItem key={option.label} onClick={()=>handleClose(option.path)}>
             {option.label}
           </MenuItem>
         ))}
@@ -105,12 +129,14 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout
         </MenuItem>
       </Popover>
+      </>
+      ) : ""}
     </>
   );
 }
